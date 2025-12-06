@@ -20,9 +20,17 @@ int recursiveSum(Node* head) {
 //return the largest value in the linked list using a recursive approach
 //you may assume the list has at least one element
 int recursiveLargestValue(Node* head) {
-
-  return -42;
-}
+  if (!head->next){
+    return head->data;
+  }
+  int curMax = recursiveLargestValue(head->next);
+  if (head->data > curMax){
+    return head->data;
+  }
+  else
+  {
+    return curMax;
+  }
 
 
 /*Given the head of a linked list, find and return the kth node of the linked list
@@ -33,8 +41,13 @@ int recursiveLargestValue(Node* head) {
  * Return &n3
  */
 Node* recursiveFindKthNode(Node *head, int k){
+  if (!head){
     return NULL;
-    //STUB: edit with the correct output, according to the lab instructions, using recursion
+  }
+  if (k == 1){
+    return head;
+  }
+  return recursiveFindKthNode(head->next, k - 1);
 }
 
 
@@ -48,8 +61,16 @@ Node* recursiveFindKthNode(Node *head, int k){
 * New list should look like this: n1 -> n3 -> n4
 */
 Node* recursiveDeleteKthNode(Node *head, int k) {
-    return NULL;
-    //STUB: edit with the correct output, according to the lab instructions, using recursion
+  if (!head){
+    return nullptr;
+  }
+  if (k == 1){
+    Node* tempNext = head->next;
+    delete head;
+    return tempNext;
+  }
+  head->next = recursiveDeleteKthNode(head->next, k - 1);
+    return head;
 }
 
 
@@ -62,7 +83,12 @@ Node* recursiveDeleteKthNode(Node *head, int k) {
 * Delete n1, n2 and return &n3
 */
 Node* recursiveRemoveKFromFront(Node *head, int k) {
-    return NULL;
+  if (k == 0){
+    return head;
+  }
+  Node* nextNode = head->next;
+  delete head;
+  return recursiveRemoveKFromFront(nextNode, k - 1);
     //STUB: edit with the correct output, according to the lab instructions, using recursion
 }
 
@@ -75,9 +101,25 @@ Node* recursiveRemoveKFromFront(Node *head, int k) {
  * Return &head of the linked list 5 -> 7 -> 9 -> 12
  */
 Node* recursiveElementwiseSum(Node *head1, Node *head2) {
-    return NULL;
-    //STUB: edit with the correct output, according to the lab instructions, using recursion
+  if (!head1 && !head2){
+    return nullptr;
+  }
+  Node* sumNode = new Node();
+  if(!head1){
+    sumNode->data = head2->data;
+    sumNode->next = recursiveElementwiseSum(nullptr, head2->next);
+  }
+  else if (!head2){
+    sumNode->data = head1->data;
+    sumNode->next = recursiveElementwiseSum(head1->next, nullptr);
+  }
+  else {
+    sumNode->data = head1->data + head2->data;
+    sumNode->next = recursiveElementwiseSum(head1->next, head2->next);
+  }
+  return sumNode;
 }
+  
 
 
 /*BONUS: Given the heads of two linked lists, splice the second linked list into the first, alternating elements from each list
